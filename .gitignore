@@ -1,2 +1,3 @@
 lib/nms/build/
 lib/nms/dist/
+__pycache__/
