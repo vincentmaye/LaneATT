@@ -166,5 +166,5 @@ If you use this code in your research, please cite:
 ```
 
 ```bash
-eval "$(ssh-agent -s)" && ssh-add -k ~/.ssh/id_ed25519
+eval "$(ssh-agent -s)" && ssh-add -k /home/vincentmayer/.ssh/id_ed25519
 ```
