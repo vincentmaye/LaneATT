@@ -11,7 +11,7 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "justMyCode": true,
-            "args": ["train"]
+            "args": ["train", "--exp_name=vincent_test", "--cfg=cfgs/laneatt_tusimple_resnet34.yml"]
         }
     ]
 }
