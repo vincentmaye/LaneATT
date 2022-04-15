@@ -1,6 +1,6 @@
 FROM pytorch/pytorch:1.6.0-cuda10.1-cudnn7-devel
 
-RUN apt-get update && apt-get install -y openssh-client openssh-server git libsm6 libxext6 libxrender-dev wget curl vim
+RUN apt-get update && apt-get install -y openssh-client openssh-server git libsm6 libxext6 libxrender-dev wget curl vim tmux
 
 RUN cat /etc/ssh/ssh_config | grep -v StrictHostKeyChecking > /etc/ssh/ssh_config.new && \
     echo "    StrictHostKeyChecking no" >> /etc/ssh/ssh_config.new && \
