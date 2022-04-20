@@ -26,7 +26,7 @@ class LaneATT(nn.Module):
                  anchor_feat_channels=64):
         super(LaneATT, self).__init__()
         # Some definitions
-        self.feature_extractor, self.backbone_nb_channels, self.stride = get_backbone(backbone, pretrained_backbone)
+        self.feature_extractor, backbone_nb_channels, self.stride = get_backbone(backbone, pretrained_backbone)
         self.img_w = img_w
         self.n_strips = S - 1
         self.n_offsets = S
@@ -56,40 +56,26 @@ class LaneATT(nn.Module):
 
         # Pre compute indices for the anchor pooling
         self.cut_zs, self.cut_ys, self.cut_xs, self.invalid_mask = self.compute_anchor_cut_indices(
-            self.backbone_nb_channels, fmap_w, self.fmap_h)
+            self.anchor_feat_channels, fmap_w, self.fmap_h)
 
         # Setup and initialize layers
-        # self.conv1 = nn.Conv2d(backbone_nb_channels, self.anchor_feat_channels, kernel_size=3, padding=1)
-        self.cls_layer = nn.Linear(self.backbone_nb_channels * self.fmap_h, 2) # was 2* in input
-        self.reg_layer = nn.Linear(self.backbone_nb_channels * self.fmap_h, self.n_offsets + 1) # was 2* in input
-        # self.attention_layer = nn.Linear(self.anchor_feat_channels * self.fmap_h, len(self.anchors) - 1)
-        # self.initialize_layer(self.attention_layer)
-        # self.initialize_layer(self.conv1)
+        self.conv1 = nn.Conv2d(backbone_nb_channels, self.anchor_feat_channels, kernel_size=3, padding=1)
+        self.cls_layer = nn.Linear(self.anchor_feat_channels * self.fmap_h, 2) # was 2* in input
+        self.reg_layer = nn.Linear(self.anchor_feat_channels * self.fmap_h, self.n_offsets + 1) # was 2* in input
+
+        self.initialize_layer(self.conv1)
         self.initialize_layer(self.cls_layer)
         self.initialize_layer(self.reg_layer)
 
     def forward(self, x, conf_threshold=None, nms_thres=0, nms_topk=3000):
         batch_features = self.feature_extractor(x)
-        # batch_features = self.conv1(batch_features)
+        batch_features = self.conv1(batch_features)
+
+        # Anchor-based feature pooling
         batch_anchor_features = self.cut_anchor_features(batch_features)
 
         # Join proposals from all images into a single proposals features batch
-        batch_anchor_features = batch_anchor_features.view(-1, self.backbone_nb_channels * self.fmap_h)
-
-        # Add attention features
-        
-        # scores = self.attention_layer(batch_anchor_features)
-        # attention = self.softmax(scores).reshape(x.shape[0], len(self.anchors), -1)
-        # attention_matrix = torch.eye(attention.shape[1], device=x.device).repeat(x.shape[0], 1, 1)
-        # non_diag_inds = torch.nonzero(attention_matrix == 0., as_tuple=False)
-        # attention_matrix[:] = 0
-        # attention_matrix[non_diag_inds[:, 0], non_diag_inds[:, 1], non_diag_inds[:, 2]] = attention.flatten()
-        # batch_anchor_features = batch_anchor_features.reshape(x.shape[0], len(self.anchors), -1)
-        # attention_features = torch.bmm(torch.transpose(batch_anchor_features, 1, 2),
-        #                                torch.transpose(attention_matrix, 1, 2)).transpose(1, 2)
-        # attention_features = attention_features.reshape(-1, self.anchor_feat_channels * self.fmap_h)
-        # batch_anchor_features = batch_anchor_features.reshape(-1, self.anchor_feat_channels * self.fmap_h)
-        # batch_anchor_features = torch.cat((attention_features, batch_anchor_features), dim=1)
+        batch_anchor_features = batch_anchor_features.view(-1, self.anchor_feat_channels * self.fmap_h)
 
         # Predict
         cls_logits = self.cls_layer(batch_anchor_features)

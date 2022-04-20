@@ -97,8 +97,8 @@ class Runner:
                     img, fp, fn = dataloader.dataset.draw_annotation(idx, img=img, pred=prediction[0])
                     if self.view == 'mistakes' and fp == 0 and fn == 0:
                         continue
-                    cv2.imshow('pred', img)
-                    cv2.waitKey(0)
+                    cv2.imwrite('pred.png', img)
+                    # cv2.waitKey(0)
 
         if save_predictions:
             with open('predictions.pkl', 'wb') as handle:
