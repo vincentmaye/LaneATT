@@ -31,8 +31,7 @@ class LaneATT(nn.Module):
         self.n_strips = S - 1
         self.n_offsets = S
         self.fmap_h = img_h // self.stride
-        fmap_w = img_w // self.stride
-        self.fmap_w = fmap_w
+        self.fmap_w = img_w // self.stride
         self.anchor_ys = torch.linspace(1, 0, steps=self.n_offsets, dtype=torch.float32)
         self.anchor_cut_ys = torch.linspace(1, 0, steps=self.fmap_h, dtype=torch.float32)
         self.anchor_feat_channels = anchor_feat_channels
@@ -41,7 +40,7 @@ class LaneATT(nn.Module):
         # Anchor angles, same ones used in Line-CNN
         self.left_angles = [72., 60., 49., 39., 30., 22.]
         self.right_angles = [108., 120., 131., 141., 150., 158.]
-        self.bottom_angles = [165., 150., 141., 131., 120., 108., 100., 90., 80., 72., 60., 49., 39., 30., 15.]
+        self.bottom_angles = [165., 150., 141., 131., 120., 108., 100., 90., 80., 72., 60., 49., 39., 30., 15.]‚
 
         # Generate anchors
         self.anchors, self.anchors_cut = self.generate_anchors(lateral_n=72, bottom_n=128)
@@ -56,12 +55,12 @@ class LaneATT(nn.Module):
 
         # Pre compute indices for the anchor pooling
         self.cut_zs, self.cut_ys, self.cut_xs, self.invalid_mask = self.compute_anchor_cut_indices(
-            self.anchor_feat_channels, fmap_w, self.fmap_h)
+            self.anchor_feat_channels, self.fmap_w, self.fmap_h)
 
         # Setup and initialize layers
         self.conv1 = nn.Conv2d(backbone_nb_channels, self.anchor_feat_channels, kernel_size=3, padding=1)
-        self.cls_layer = nn.Linear(self.anchor_feat_channels * self.fmap_h, 2) # was 2* in input
-        self.reg_layer = nn.Linear(self.anchor_feat_channels * self.fmap_h, self.n_offsets + 1) # was 2* in input
+        self.cls_layer = nn.Linear(self.anchor_feat_channels * self.fmap_h, 2)
+        self.reg_layer = nn.Linear(self.anchor_feat_channels * self.fmap_h, self.n_offsets + 1)
 
         self.initialize_layer(self.conv1)
         self.initialize_layer(self.cls_layer)
