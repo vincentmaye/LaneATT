@@ -40,7 +40,7 @@ class LaneATT(nn.Module):
         # Anchor angles, same ones used in Line-CNN
         self.left_angles = [72., 60., 49., 39., 30., 22.]
         self.right_angles = [108., 120., 131., 141., 150., 158.]
-        self.bottom_angles = [165., 150., 141., 131., 120., 108., 100., 90., 80., 72., 60., 49., 39., 30., 15.]‚
+        self.bottom_angles = [165., 150., 141., 131., 120., 108., 100., 90., 80., 72., 60., 49., 39., 30., 15.]
 
         # Generate anchors
         self.anchors, self.anchors_cut = self.generate_anchors(lateral_n=72, bottom_n=128)
@@ -242,7 +242,8 @@ class LaneATT(nn.Module):
         n_anchors = nb_origins * len(angles)
 
         # each row, first for x and second for y:
-        # 2 scores, 1 start_y, start_x, 1 lenght, S coordinates, score[0] = negative prob, score[1] = positive prob
+        # 2 scores, 2 start points (x and y), 1 lenght, S=n_offsets coordinates
+        # score[0] = negative prob, score[1] = positive prob
         anchors = torch.zeros((n_anchors, 2 + 2 + 1 + self.n_offsets))
         anchors_cut = torch.zeros((n_anchors, 2 + 2 + 1 + self.fmap_h))
         for i, start in enumerate(starts):
