@@ -164,7 +164,3 @@ If you use this code in your research, please cite:
   year      = {2021}
 }
 ```
-
-```bash
-eval "$(ssh-agent -s)" && ssh-add -k /home/vincentmayer/.ssh/id_ed25519
-```
