@@ -1,18 +1,18 @@
 {
-  "autoDocstring.docstringFormat": "numpy",
+  "autoDocstring.docstringFormat": "numpy-notypes",
   // .. any other settings
   "editor.formatOnSave": true,
   "terminal.integrated.env.linux": {
-      "PYTHONPATH": "${workspaceFolder}"
+    "PYTHONPATH": "${workspaceFolder}"
   },
   "python.formatting.provider": "black",
   "python.formatting.blackArgs": [
-      "--config",
-      "pyproject.toml",
+    "--config",
+    "pyproject.toml",
   ],
   "python.linting.flake8Enabled": true,
   "python.linting.flake8Args": [
-      "--settings",
-      "setup.cfg"
+    "--settings",
+    "setup.cfg"
   ]
 }
