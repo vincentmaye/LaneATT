@@ -10,8 +10,12 @@
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
-            "justMyCode": true,
-            "args": ["train", "--exp_name=vincent_test", "--cfg=cfgs/laneatt_tusimple_resnet34.yml"]
+            "justMyCode": false,
+            "args": [
+                "train",
+                "--exp_name=vincent_test",
+                "--cfg=cfgs/laneatt_tusimple_resnet34.yml"
+            ]
         }
     ]
 }
