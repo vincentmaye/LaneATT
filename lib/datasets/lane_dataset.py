@@ -93,10 +93,10 @@ class LaneDataset(Dataset):
         else:
             img_w, img_h = img_wh
 
-        old_lanes = anno['lanes']
+        old_lanes_0 = anno['lanes']
 
         # removing lanes with less than 2 points
-        old_lanes = filter(lambda x: len(x) > 1, old_lanes)
+        old_lanes = filter(lambda x: len(x) > 1, old_lanes_0)
         # sort lane points by Y (bottom to top of the image)
         old_lanes = [sorted(lane, key=lambda x: -x[1]) for lane in old_lanes]
         # remove points with same Y (keep first occurrence)
@@ -126,6 +126,7 @@ class LaneDataset(Dataset):
             lanes[lane_idx, 5:5 + len(all_xs)] = all_xs
 
         new_anno = {'path': anno['path'], 'label': lanes, 'old_anno': anno}
+        assert len(old_lanes_0) == len(old_lanes)
         return new_anno
 
     def sample_lane(self, points, sample_ys):

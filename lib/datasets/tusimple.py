@@ -76,7 +76,7 @@ class TuSimple(LaneDatasetLoader):
                 y_samples = data['h_samples']
                 gt_lanes = data['lanes']
                 lanes = [[(x, y) for (x, y) in zip(lane, y_samples) if x >= 0] for lane in gt_lanes]
-                lanes = [lane for lane in lanes if len(lane) > 0]
+                lanes = [l for l in lanes if len(l) > 1]
                 max_lanes = max(max_lanes, len(lanes))
                 self.annotations.append({
                     'path': os.path.join(self.root, data['raw_file']),
