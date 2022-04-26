@@ -126,7 +126,6 @@ class LaneDataset(Dataset):
             lanes[lane_idx, 5:5 + len(all_xs)] = all_xs
 
         new_anno = {'path': anno['path'], 'label': lanes, 'old_anno': anno}
-        assert len(old_lanes_0) == len(old_lanes)
         return new_anno
 
     def sample_lane(self, points, sample_ys):
